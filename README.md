@@ -16,7 +16,7 @@ In your project's `composer.json`, require the `wp-cli/autoload-splitter`, and t
 ```json
 {
     "require": {
-        "wp-cli/autoload-splitter": "^1"
+        "wp-cli/autoload-splitter": "^0.1"
     },
     "extra": {
         "autoload-splitter": {
