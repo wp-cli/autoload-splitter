@@ -24,6 +24,7 @@
 		"class": "WP_CLI\\AutoloadSplitter\\ComposerPlugin"
 	},
 	"require": {
-		"composer-plugin-api": "^1.1"
+		"composer-plugin-api": "^1.1",
+		"mindplay/composer-locator": "^2.1"
 	}
 }

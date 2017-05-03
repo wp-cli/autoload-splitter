@@ -8,6 +8,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use ComposerLocator;
 
 /**
  * Class ComposerPlugin.
@@ -65,8 +66,12 @@ final class ComposerPlugin implements PluginInterface, EventSubscriberInterface
             ->getPackage()
             ->getExtra();
 
+        $autoloadSplitterLocationFallback = ComposerLocator::isInstalled('wp-cli/wp-cli')
+            ? ComposerLocator::getPath('wp-cli/wp-cli') . '/php/WP_CLI/AutoloadSplitter.php'
+	        : 'vendor/wp-cli/wp-li/php/WP_CLI/AutoloadSplitter.php';
+
         $splitterLogic    = self::getExtraKey(self::LOGIC_CLASS_KEY, 'WP_CLI\AutoloadSplitter');
-        $splitterLocation = self::getExtraKey(self::LOGIC_CLASS_LOCATION_KEY, 'php/WP_CLI/AutoloadSplitter.php');
+        $splitterLocation = self::getExtraKey(self::LOGIC_CLASS_LOCATION_KEY, $autoloadSplitterLocationFallback);
         $filePrefixTrue   = self::getExtraKey(self::SPLIT_TARGET_PREFIX_TRUE_KEY, 'autoload_commands');
         $filePrefixFalse  = self::getExtraKey(self::SPLIT_TARGET_PREFIX_FALSE_KEY, 'autoload_framework');
 
