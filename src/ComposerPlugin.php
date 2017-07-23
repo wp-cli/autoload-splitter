@@ -71,7 +71,14 @@ final class ComposerPlugin implements PluginInterface, EventSubscriberInterface
         $filePrefixFalse  = self::getExtraKey(self::SPLIT_TARGET_PREFIX_FALSE_KEY, 'autoload_framework');
 
         if (! class_exists($splitterLogic)) {
-            include_once getcwd() . "/{$splitterLocation}";
+            $splitterClassPath = getcwd() . "/{$splitterLocation}";
+
+            // Avoid proceeding if the splitter class file does not exist.
+            if ( ! is_readable( $splitterClassPath ) ) {
+                return;
+            }
+
+            include_once $splitterClassPath;
         }
 
         $generator = new AutoloadGenerator(
