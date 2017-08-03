@@ -3,6 +3,7 @@
 namespace WP_CLI\AutoloadSplitter;
 
 use Composer\Composer;
+use Composer\Config;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
@@ -59,22 +60,24 @@ final class ComposerPlugin implements PluginInterface, EventSubscriberInterface
         // iterated and translated to arrays of classes.
         $optimize = true;
 
-        $suffix = $config->get('autoloader-suffix');
+        $vendorDir       = $config->get('vendor-dir', Config::RELATIVE_PATHS);
+        $defaultLocation = "{$vendorDir}/wp-cli/wp-cli/php/WP_CLI/AutoloadSplitter.php";
+        $suffix          = $config->get('autoloader-suffix');
 
         self::$extra = $event->getComposer()
             ->getPackage()
             ->getExtra();
 
         $splitterLogic    = self::getExtraKey(self::LOGIC_CLASS_KEY, 'WP_CLI\AutoloadSplitter');
-        $splitterLocation = self::getExtraKey(self::LOGIC_CLASS_LOCATION_KEY, 'vendor/wp-cli/wp-cli/php/WP_CLI/AutoloadSplitter.php');
+        $splitterLocation = self::getExtraKey(self::LOGIC_CLASS_LOCATION_KEY, $defaultLocation);
         $filePrefixTrue   = self::getExtraKey(self::SPLIT_TARGET_PREFIX_TRUE_KEY, 'autoload_commands');
         $filePrefixFalse  = self::getExtraKey(self::SPLIT_TARGET_PREFIX_FALSE_KEY, 'autoload_framework');
 
-        if (! class_exists($splitterLogic)) {
-            $splitterClassPath = getcwd() . "/{$splitterLocation}";
+        if (!class_exists($splitterLogic)) {
+            $splitterClassPath = sprintf('%s/%s', getcwd(), $splitterLocation);
 
             // Avoid proceeding if the splitter class file does not exist.
-            if ( ! is_readable( $splitterClassPath ) ) {
+            if (!is_readable( $splitterClassPath)) {
                 return;
             }
 
