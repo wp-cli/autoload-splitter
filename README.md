@@ -1,6 +1,12 @@
 WP-CLI Autoload Splitter Composer Plugin
 =======================================
 
+---
+
+> ⛔️ __THIS PACKAGE IS OBSOLETE AS OF WP-CLI v2.0.0__ ⛔️
+
+---
+
 This is a custom autoloader generator for [WP-CLI](https://wp-cli.org) that generates two separate autoloaders that split up the autoloadable classes. This allows these independent groups of autoloadable classes to be registered at different times in the code execution path.
 
 Using the default settings, it will produce the following two files:
